@@ -15,13 +15,8 @@ public class RegistryManager {
     }
 
     public void register() {
-        if(BuiltInRegistries.REGISTRY instanceof MappedRegistry<? extends Registry<?>> root)
-            //root.unfreeze();
 
         this.clientManager.getPluginManager().call(new RegistryInitEvent(BuiltInRegistries.REGISTRY));
-
-        if(BuiltInRegistries.REGISTRY instanceof MappedRegistry<? extends Registry<?>> root)
-            root.freeze();
 
     }
 
