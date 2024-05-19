@@ -1,0 +1,20 @@
+main: '' # DO NOT DEFINE A MAIN CLASS IN CORE LOADER
+
+name: 'PixelCrasher'
+version: '0.4.0b1'
+author: 'PixelCrack3r'
+commands:
+  help:
+    usage: '#help [page]'
+    description: 'A PixelCrasher provided command'
+  plugins:
+    usage: '#plugins'
+    description: 'A PixelCrasher provided command'
+    aliases:
+      - 'pl'
+      - 'addons'
+  reload:
+    usage: '#reload'
+    description: 'A PixelCrasher provided command'
+    aliases:
+      - 'rl'
