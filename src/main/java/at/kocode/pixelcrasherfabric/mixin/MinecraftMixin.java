@@ -10,9 +10,6 @@ import de.pixelcrasher.plugin.internal.CorePluginLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.main.GameConfig;
-import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.PackRepository;
-import net.minecraft.server.packs.repository.RepositorySource;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,8 +18,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.lang.reflect.Field;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @Mixin(Minecraft.class)
@@ -36,8 +31,6 @@ public abstract class MinecraftMixin {
 
 	@Inject(at = @At(value = "HEAD"), method = "setScreen", cancellable = true)
 	private void setScreen(@Nullable Screen screen, CallbackInfo callbackInfo) {
-		listPacks();
-
 		GuiScreenChangeEvent event = PixelCrasher.getInstance().getPluginManager().call(new GuiScreenChangeEvent(Minecraft.getInstance().screen, screen));
 
 		if(event.isCancelled()) {
@@ -74,26 +67,4 @@ public abstract class MinecraftMixin {
 
 		PixelCrasherMod.externalAssetSource = gameConfig.location.getExternalAssetSource();
     }
-
-	private static void listPacks() {
-		try {
-			Field resourcePackRepository = Minecraft.getInstance().getClass().getDeclaredField("resourcePackRepository");
-
-			resourcePackRepository.setAccessible(true);
-
-			PackRepository repository = ((PackRepository) resourcePackRepository.get(Minecraft.getInstance()));
-			repository.reload();
-			PixelCrasherMod.LOGGER.info("Repository");
-			for(Pack pack : repository.getSelectedPacks()) {
-				PixelCrasherMod.LOGGER.info("  Pack {} in source {} was loaded.", pack.getTitle().getString(), pack.getPackSource());
-			}
-
-			Field sourcesField = repository.getClass().getDeclaredField("sources");
-			sourcesField.setAccessible(true);
-			Set<RepositorySource> sources = (Set<RepositorySource>) sourcesField.get(repository);
-			//for(Respo)
-		} catch (NoSuchFieldException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
 }
