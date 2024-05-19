@@ -10,25 +10,15 @@ import de.pixelcrasher.plugin.internal.CorePluginLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.main.GameConfig;
-import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.PackRepository;
-import net.minecraft.server.packs.repository.RepositorySource;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.lang.reflect.Field;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
-	@Shadow public abstract CompletableFuture<Void> reloadResourcePacks();
-
 	@Inject(at = @At("HEAD"), method = "close")
 	private void close(CallbackInfo info) {
 		PixelCrasher.getInstance().onDisable();
