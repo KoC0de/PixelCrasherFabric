@@ -3,7 +3,7 @@
 	"package": "at.kocode.pixelcrasherfabric.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-      "MinecraftMixin",
+      	"MinecraftMixin",
 		"LocalPlayerMixin",
 		"KeyboardHandlerMixin"
 	],
