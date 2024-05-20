@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class KeyboardHandlerMixin {
 
     @Inject(at = @At("HEAD"), method = "keyPress")
-    public void keyPress(long p_90894_, int p_90895_, int p_90896_, int p_90897_, int p_90898_, CallbackInfo ci) {
-        if (p_90894_ == Minecraft.getInstance().getWindow().getWindow()) {
-            PixelCrasher.getInstance().getPluginManager().call(new KeyEvent(p_90894_, p_90895_, p_90896_, p_90897_, p_90898_));
+    public void keyPress(long l, int i, int j, int k, int m, CallbackInfo ci) {
+        if (l == Minecraft.getInstance().getWindow().getWindow()) {
+            PixelCrasher.getInstance().getPluginManager().call(new KeyEvent(l, i, j, k, m));
         }
     }
 
