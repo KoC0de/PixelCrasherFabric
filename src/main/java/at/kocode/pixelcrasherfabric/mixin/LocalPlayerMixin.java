@@ -35,7 +35,7 @@ public abstract class LocalPlayerMixin {
         PixelCrasher.getInstance().getPluginManager().call(new LocalPlayerTickEvent());
     }
 
-    @ModifyVariable(method = "sendPosition", at = @At(value = "STORE", shift = At.Shift.AFTER), name = "bl")
+    @ModifyVariable(method = "sendPosition", at = @At(value = "STORE"), name = "bl")
     private boolean sendPosition(boolean bl) {
         LocalPlayer player = Minecraft.getInstance().player;
 
