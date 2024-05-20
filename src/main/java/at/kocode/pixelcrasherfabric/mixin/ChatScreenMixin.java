@@ -9,13 +9,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ChatScreen.class)
 public abstract class ChatScreenMixin {
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/ChatScreen;normalizeChatMessage(Ljava/lang/String;)Ljava/lang/String;", shift = At.Shift.AFTER), method = "handleChatInput")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/ChatScreen;normalizeChatMessage(Ljava/lang/String;)Ljava/lang/String;", shift = At.Shift.AFTER), method = "handleChatInput", cancellable = true)
     public void handleChatInput(String string, boolean bl, CallbackInfoReturnable<Boolean> cir) {
         if(string.isEmpty()) return;
 
-        if(string.startsWith("#")) {
-            PixelCrasher.getInstance().getCommandMap().dispatch(PixelCrasher.getInstance().getClientPlayer(), string.substring(1));
-        }
+        if(string.startsWith("#")) return;
+
+        PixelCrasher.getInstance().getCommandMap().dispatch(PixelCrasher.getInstance().getClientPlayer(), string.substring(1));
+        cir.setReturnValue(true);
+        cir.cancel();
     }
 
 }
