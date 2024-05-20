@@ -13,7 +13,7 @@ public abstract class ChatScreenMixin {
     public void handleChatInput(String string, boolean bl, CallbackInfoReturnable<Boolean> cir) {
         if(string.isEmpty()) return;
 
-        if(string.startsWith("#")) return;
+        if(!string.startsWith("#")) return;
 
         PixelCrasher.getInstance().getCommandMap().dispatch(PixelCrasher.getInstance().getClientPlayer(), string.substring(1));
         cir.setReturnValue(true);
