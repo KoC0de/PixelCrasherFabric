@@ -1,20 +1,20 @@
 package at.kocode.pixelcrasherfabric.mixin;
 
-import at.kocode.pixelcrasherfabric.PixelCrasherMod;
 import de.pixelcrasher.PixelCrasher;
 import de.pixelcrasher.event.net.PlayerPositionSendEvent;
 import de.pixelcrasher.event.timing.LocalPlayerTickEvent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@SuppressWarnings("ALL")
 @Mixin(LocalPlayer.class)
-public class LocalPlayerMixin {
+public abstract class LocalPlayerMixin {
     @Shadow
     private double xLast;
     @Shadow
@@ -35,18 +35,13 @@ public class LocalPlayerMixin {
         PixelCrasher.getInstance().getPluginManager().call(new LocalPlayerTickEvent());
     }
 
-   @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isShiftKeyDown()Z", shift = At.Shift.AFTER), method = "sendPosition")
-    public void sendPosition(CallbackInfo info) {
-       PixelCrasherMod.LOGGER.info("Debg 0");
-        LocalPlayer player = ((LocalPlayer)(Object)this);
+    @ModifyVariable(method = "sendPosition", at = @At(value = "STORE", shift = At.Shift.AFTER), name = "bl")
+    private boolean sendPosition(boolean bl) {
+        LocalPlayer player = Minecraft.getInstance().player;
 
-       PixelCrasherMod.LOGGER.info("Debg 1");
         PlayerPositionSendEvent e = PixelCrasher.getInstance().getPluginManager().call(new PlayerPositionSendEvent(player.getX(), player.getY(), player.getZ(),
                 player.getXRot(), player.getYRot(), this.xLast, this.yLast1, this.zLast, this.xRotLast, this.yRotLast,
                 player.onGround(), player.isShiftKeyDown(), this.lastOnGround, this.wasShiftKeyDown));
-
-       PixelCrasherMod.LOGGER.info("Debg 2");
-        //localRef.set(e.isShiftKeyDown());
 
         player.setPos(new Vec3(e.getX(), e.getY(), e.getZ()));
         player.setXRot(e.getXRot());
@@ -60,5 +55,8 @@ public class LocalPlayerMixin {
         player.setOnGround(e.onGround());
         wasShiftKeyDown = e.wasShiftKeyDown();
         lastOnGround = e.wasOnGround();
+
+        return e.isShiftKeyDown();
     }
+
 }
